@@ -87,13 +87,12 @@ public class AuraWebSocketServer extends WebSocketServer {
 				Writer writer = new BufferedWriter(outputStreamWriter);
 		) {
 			writer.write(message);
+			conn.send(fileName + " : OK");
+			LOGGER.info("New file written : {}", fileName);
 		} catch (IOException e) {
 			e.printStackTrace();
 			conn.send(fileName + " : KO");
 			LOGGER.error("An error occurred when trying to write file  : {}", fileName);
-		} finally {
-			conn.send(fileName + " : OK");
-			LOGGER.info("New file written : {}", fileName);
 		}
 	}
 
