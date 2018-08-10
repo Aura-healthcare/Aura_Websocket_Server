@@ -1,9 +1,10 @@
+FROM gradle:4.9.0-jdk8-alpine
+ADD src src
+ADD build.gradle .
+RUN gradle fatJar
 
 FROM openjdk:8u102-jre
-MAINTAINER Laurent Ribiere
-
-COPY WebSocket-server-0.1.0.jar /home/WebSocket-server-0.1.0.jar
-
-CMD ["java","-jar","/home/WebSocket-server-0.1.0.jar"]
-
+COPY --from=0 /home/gradle/build/libs/WebSocketServer-1.0.0-SNAPSHOT.jar /home/WebSocketServer-1.0.0-SNAPSHOT.jar
 EXPOSE 8887
+LABEL maintainer="laurent.ribiere@aura.healthcare"
+CMD ["java","-jar","/home/WebSocketServer-1.0.0-SNAPSHOT.jar","-c wsserver.properties", "-d"]

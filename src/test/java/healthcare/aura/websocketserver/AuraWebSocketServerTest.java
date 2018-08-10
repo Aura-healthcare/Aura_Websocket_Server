@@ -1,37 +1,32 @@
 package healthcare.aura.websocketserver;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-// TODO
+//TODO
 public class AuraWebSocketServerTest {
+    @Before
+    public void setUp() throws Exception {
+        // Setup WS client
+        // Start TestWSServer
+        // Connect both
+    }
+
+    @Test
+    public void onMessageShouldSerializeIncomingJsonFileProperly() throws Exception {
+        // Given
+
+        // When
+
+        // Then
+    }
+
     @After
     public void tearDown() throws Exception {
-        //Given
-
-        //When
-
-        //Then
+        // Shutdown client and server properly
+        // Remove created file on file system
     }
-
-    @Test
-    public void onMessage() throws Exception {
-        //Given
-
-        //When
-
-        //Then
-    }
-
-    @Test
-    public void onError() throws Exception {
-        //Given
-
-        //When
-
-        //Then
-    }
-
 }

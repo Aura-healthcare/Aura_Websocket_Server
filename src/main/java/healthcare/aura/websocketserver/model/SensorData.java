@@ -1,5 +1,8 @@
 package healthcare.aura.websocketserver.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /*
  A class used to deserialize data incoming from the mobile app.
 
@@ -11,7 +14,7 @@ package healthcare.aura.websocketserver.model;
       "data": [
         "1900-02-01T01:01:01.000 0",
         "1901-02-01T01:01:01.000 100",
-        "1902-02-01T01:01:01.000 200",
+        "1902-02-01T01:01:01.000 200"
         ]
     }
 * */
@@ -21,28 +24,39 @@ public class SensorData {
     private String type; // Sensor type field
     private String[] data; // Data points
 
-    SensorData(){}
+    SensorData() {}
 
-    public String getUser(){
+    public String getUser() {
         return this.user;
     }
 
-    public String getDeviceAddress(){
+    public String getDeviceAddress() {
         return this.device_address;
     }
 
-    public String getSensorType(){
+    public String getSensorType() {
         return this.type;
     }
 
-    public String[] getData(){
+    public String[] getData() {
         return this.data;
     }
 
-    public String getFirstTimestamp(){
+    private String getFirstTimestampCleaned() {
         return this
                 .data[0]
                 .split(" ", 2)[0]
-                .replaceAll(":", "");
+                .replaceAll(":", "")
+                .replace(".", "");
+    }
+
+    public String generateFileName() {
+        String delimiter = "_";
+        String fileExtension = ".json";
+        List<String> fileNameElementsList = new ArrayList<>();
+        fileNameElementsList.add(this.user);
+        fileNameElementsList.add(this.type);
+        fileNameElementsList.add(this.getFirstTimestampCleaned());
+        return String.join(delimiter, fileNameElementsList) + fileExtension;
     }
 }
