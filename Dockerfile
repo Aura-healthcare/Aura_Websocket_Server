@@ -1,10 +1,10 @@
 FROM gradle:4.9.0-jdk8-alpine
 ADD src src
 ADD build.gradle .
-RUN gradle fatJar
+RUN gradle test fatJar
 
 FROM openjdk:8u102-jre
 COPY --from=0 /home/gradle/build/libs/WebSocketServer-1.0.0-SNAPSHOT.jar /home/WebSocketServer-1.0.0-SNAPSHOT.jar
 EXPOSE 8887
 LABEL maintainer="laurent.ribiere@aura.healthcare"
-CMD ["java","-jar","/home/WebSocketServer-1.0.0-SNAPSHOT.jar","-c wsserver.properties", "-d"]
+CMD ["java","-jar","/home/WebSocketServer-1.0.0-SNAPSHOT.jar","-c/home/conf/wsserver.properties", "-d"]
