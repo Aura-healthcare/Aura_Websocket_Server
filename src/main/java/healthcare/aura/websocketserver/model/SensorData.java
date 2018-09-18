@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /*
- A class used to deserialize data incoming from the mobile app.
+ A class used to deserialize sensor data incoming from the mobile app.
 
  Example of Json file sent :
     {

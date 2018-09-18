@@ -29,6 +29,9 @@ import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.List;
+import java.util.ArrayList;
+import java.lang.reflect.Type;
 
 import healthcare.aura.websocketserver.utils.Utils;
 import org.java_websocket.WebSocket;
@@ -36,7 +39,10 @@ import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import healthcare.aura.websocketserver.model.SensorData;
+import healthcare.aura.websocketserver.model.SensitiveEventData;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -69,8 +75,28 @@ public class AuraWebSocketServer extends WebSocketServer {
         LOGGER.info("###### Thread number : {}", Thread.currentThread().getId());
 
         Gson gson = new Gson();
-        SensorData sensorData = gson.fromJson(message, SensorData.class);
-        String fileName = sensorData.generateFileName();
+        String fileName = "";
+
+        try{
+          SensorData sensorData = gson.fromJson(message, SensorData.class);
+          fileName = sensorData.generateFileName();
+        } catch (Exception e){
+          LOGGER.info("Not a sensor data file");
+        }
+
+        try{
+          Type type = new TypeToken<ArrayList<SensitiveEventData> >(){}.getType();
+          ArrayList<SensitiveEventData> seizureDataList = gson.fromJson(message, type);
+          fileName = seizureDataList.get(0).generateFileName();
+          LOGGER.info("FileName " + fileName);
+        } catch (Exception e){
+          LOGGER.info("Not a seizure data file");
+        }
+
+        if(fileName.isEmpty()){
+          LOGGER.error("Invalid input data file");
+          return;
+        }
 
         try (
                 FileOutputStream fileOutputStream = new FileOutputStream(dataFolderPath + fileName);
