@@ -40,6 +40,7 @@ import org.java_websocket.server.WebSocketServer;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.google.gson.JsonSyntaxException;
 
 import healthcare.aura.websocketserver.model.SensorData;
 import healthcare.aura.websocketserver.model.SensitiveEventData;
@@ -80,7 +81,7 @@ public class AuraWebSocketServer extends WebSocketServer {
         try{
           SensorData sensorData = gson.fromJson(message, SensorData.class);
           fileName = sensorData.generateFileName();
-        } catch (Exception e){
+        } catch (JsonSyntaxException e){
           LOGGER.info("Not a sensor data file");
         }
 
@@ -89,7 +90,7 @@ public class AuraWebSocketServer extends WebSocketServer {
           ArrayList<SensitiveEventData> seizureDataList = gson.fromJson(message, type);
           fileName = seizureDataList.get(0).generateFileName();
           LOGGER.info("FileName " + fileName);
-        } catch (Exception e){
+        } catch (JsonSyntaxException e){
           LOGGER.info("Not a seizure data file");
         }
 
