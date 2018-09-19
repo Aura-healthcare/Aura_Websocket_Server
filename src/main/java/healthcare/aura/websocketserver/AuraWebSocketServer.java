@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.lang.reflect.Type;
 
+import com.google.gson.JsonIOException;
 import healthcare.aura.websocketserver.utils.Utils;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
@@ -78,25 +79,25 @@ public class AuraWebSocketServer extends WebSocketServer {
         Gson gson = new Gson();
         String fileName = "";
 
-        try{
-          SensorData sensorData = gson.fromJson(message, SensorData.class);
-          fileName = sensorData.generateFileName();
-        } catch (JsonSyntaxException e){
-          LOGGER.info("Not a sensor data file");
+        try {
+            SensorData sensorData = gson.fromJson(message, SensorData.class);
+            fileName = sensorData.generateFileName();
+        } catch (Exception e) {
+            LOGGER.info("Not a sensor data file");
         }
 
-        try{
-          Type type = new TypeToken<ArrayList<SensitiveEventData> >(){}.getType();
-          ArrayList<SensitiveEventData> seizureDataList = gson.fromJson(message, type);
-          fileName = seizureDataList.get(0).generateFileName();
-          LOGGER.info("FileName " + fileName);
-        } catch (JsonSyntaxException e){
-          LOGGER.info("Not a seizure data file");
+        try {
+            Type type = new TypeToken<ArrayList<SensitiveEventData>>(){}.getType();
+            ArrayList<SensitiveEventData> seizureDataList = gson.fromJson(message, type);
+            fileName = seizureDataList.get(0).generateFileName();
+            LOGGER.info("FileName " + fileName);
+        } catch (Exception e) {
+            LOGGER.info("Not a seizure data file");
         }
 
-        if(fileName.isEmpty()){
-          LOGGER.error("Invalid input data file");
-          return;
+        if (fileName.isEmpty()) {
+            LOGGER.error("Invalid input data file");
+            return;
         }
 
         try (
